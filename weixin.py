@@ -152,7 +152,10 @@ class WebWeixin(object):
         }
         data = self._post(url, params, False)
         regx = r'window.QRLogin.code = (\d+); window.QRLogin.uuid = "(\S+?)"'
-        pm = re.search(regx, data.decode("utf8"))
+        if PY2:
+            pm = re.search(regx, data)
+        else:
+            pm = re.search(regx, data.decode("utf8"))
         if pm:
             code = pm.group(1)
             self.uuid = pm.group(2)
@@ -337,7 +340,7 @@ class WebWeixin(object):
             'webpush1.wechat.com',
             'webpush2.wechat.com',
             'webpush1.wechatapp.com',
-            'webpush.wechatapp.com'
+            # 'webpush.wechatapp.com'
         ]
         for host in SyncHost:
             self.syncHost = host
